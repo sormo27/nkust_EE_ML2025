@@ -146,7 +146,7 @@ $$\mathbf{b}^{(l)}_{\text{new}} = \mathbf{b}^{(l)}_{\text{old}} - \eta \frac{\pa
 
 ### 3.1 定義誤差項 $\boldsymbol{\delta}^{(l)}$
 
-定義第 $l$ 層的誤差項為損失對線性組合的偏導:
+定義第 $l$ 層的誤差項為損失對線性組合的偏微分:
 
 $$\boldsymbol{\delta}^{(l)} = \frac{\partial L}{\partial \mathbf{z}^{(l)}}$$
 
