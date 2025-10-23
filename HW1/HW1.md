@@ -229,6 +229,6 @@ $$\mathbf{W}^{(l)}_{\text{new}} = \mathbf{W}^{(l)}_{\text{old}} + \Delta \mathbf
 | **調整方式** | 直接計算最優解 | 逐步逼近最優解 |
 | **依賴數據** | 僅支持向量 | 所有訓練樣本 |
 
-
+#Colab上實作
 
 
