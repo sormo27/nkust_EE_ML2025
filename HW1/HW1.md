@@ -1,4 +1,4 @@
-# Support Vector Machine (SVM) 訓練過程與最佳權重推導
+# 支持向量機 (Support Vector Machine, SVM) 訓練過程與最佳權重推導
 
 本文詳細推導了線性可分支持向量機的訓練過程,核心目標是找到最大化分類間隔的超平面參數 $\mathbf{w}$ 和 $b$。
 
@@ -94,9 +94,9 @@ $$b^* = y_k - \mathbf{w}^{*T} \mathbf{x}_k$$
 
 ---
 
-# Multilayer Perceptron (MLP) 訓練過程: Backward Propagation 推導與權重調整
+# 多層感知器 (MLP) 訓練過程: 反向傳播推導與權重調整
 
-本文為推導使用反向傳播算法 (Backpropagation) 訓練 MLP 的過程,重點描述如何計算梯度以及實現權重的迭代調整 $\mathbf{W}^* = \mathbf{W} + \Delta \mathbf{W}$。
+本文詳細推導使用反向傳播算法 (Backpropagation) 訓練 MLP 的過程,重點闡述如何計算梯度以及實現權重的迭代調整 $\mathbf{W}^* = \mathbf{W} + \Delta \mathbf{W}$。
 
 ## 一、前向傳播 (Forward Propagation)
 
@@ -228,6 +228,7 @@ $$\mathbf{W}^{(l)}_{\text{new}} = \mathbf{W}^{(l)}_{\text{old}} + \Delta \mathbf
 | **關鍵算法** | SMO 算法 | 反向傳播 |
 | **調整方式** | 直接計算最優解 | 逐步逼近最優解 |
 | **依賴數據** | 僅支持向量 | 所有訓練樣本 |
+
 
 
 
