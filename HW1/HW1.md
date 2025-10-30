@@ -71,8 +71,6 @@ $$
 L = \frac{2k}{\|\mathbf{w}\|}
 $$
 
-<img width="910" height="658" alt="SVM Margin Illustration" src="https://github.com/user-attachments/assets/46870fba-61f1-4101-b32c-80d977f76dfd" />
-
 ---
 
 ## 二、最佳化問題的建立
