@@ -564,13 +564,15 @@ $$
 
 ### 3.1 計算梯度的挑戰
 
-**問題**：如何高效計算 $\frac{\partial L}{\partial \mathbf{W}^{(l)}}$？
+**問題**：如何高效計算 $\frac{\partial L}{\partial \mathbf{W}^{(l)}}$ ？
 
 **直接計算的困難：**
 
 對於第 1 層的權重，損失函數的計算路徑是：
 
-$$\mathbf{W}^{(1)} \to \mathbf{z}^{(1)} \to \mathbf{a}^{(1)} \to \mathbf{z}^{(2)} \to \cdots \to \mathbf{a}^{(L)} \to L$$
+$$
+\mathbf{W}^{(1)} \to \mathbf{z}^{(1)} \to \mathbf{a}^{(1)} \to \mathbf{z}^{(2)} \to \cdots \to \mathbf{a}^{(L)} \to L
+$$
 
 需要多次應用 chain rule，計算複雜度極高！
 
@@ -599,53 +601,53 @@ $$
 
 **對於輸出層 $L$：**
 
-$
+$$
 \boldsymbol{\delta}^{(L)} = \frac{\partial L}{\partial \mathbf{z}^{(L)}} = \frac{\partial L}{\partial \mathbf{a}^{(L)}} \odot f'(\mathbf{z}^{(L)})
-$
+$$
 
 **Chain rule 展開：**
 
-$
+$$
 \frac{\partial L}{\partial z_i^{(L)}} = \sum_k \frac{\partial L}{\partial a_k^{(L)}} \cdot \frac{\partial a_k^{(L)}}{\partial z_i^{(L)}}
-$
+$$
 
 由於 $a_i^{(L)} = f(z_i^{(L)})$，所以：
 
-$
+$$
 \frac{\partial a_i^{(L)}}{\partial z_i^{(L)}} = f'(z_i^{(L)})
-$
+$$
 
 **對於 MSE 損失：**
 
-$
+$$
 L = \frac{1}{2}\sum_k (\hat{y}_k - y_k)^2 = \frac{1}{2}\sum_k (a_k^{(L)} - y_k)^2
-$
+$$
 
-$
+$$
 \frac{\partial L}{\partial a_k^{(L)}} = a_k^{(L)} - y_k = \hat{y}_k - y_k
-$
+$$
 
 如果輸出層用 identity activation ($f(z) = z$, $f'(z) = 1$)：
 
-$
+$$
 \boxed{\boldsymbol{\delta}^{(L)} = \hat{\mathbf{y}} - \mathbf{y}}
-$
+$$
 
 **對於 Cross-Entropy + Softmax：**
 
-$
+$$
 L = -\sum_k y_k \log(\hat{y}_k)
-$
+$$
 
-$
+$$
 \hat{y}_k = \frac{e^{z_k^{(L)}}}{\sum_j e^{z_j^{(L)}}}
-$
+$$
 
 可以證明：
 
-$
+$$
 \boxed{\boldsymbol{\delta}^{(L)} = \hat{\mathbf{y}} - \mathbf{y}}
-$
+$$
 
 （Softmax 的導數恰好抵消！）
 
@@ -655,31 +657,31 @@ $
 
 使用 chain rule：
 
-$
+$$
 \frac{\partial L}{\partial z_i^{(l)}} = \sum_j \frac{\partial L}{\partial z_j^{(l+1)}} \cdot \frac{\partial z_j^{(l+1)}}{\partial a_i^{(l)}} \cdot \frac{\partial a_i^{(l)}}{\partial z_i^{(l)}}
-$
+$$
 
 **第二項：**
 
-$
+$$
 z_j^{(l+1)} = \sum_k W_{jk}^{(l+1)} a_k^{(l)} + b_j^{(l+1)}
-$
+$$
 
-$
+$$
 \frac{\partial z_j^{(l+1)}}{\partial a_i^{(l)}} = W_{ji}^{(l+1)}
-$
+$$
 
 **第三項：**
 
-$
+$$
 \frac{\partial a_i^{(l)}}{\partial z_i^{(l)}} = f'(z_i^{(l)})
-$
+$$
 
 **合併得到向量形式：**
 
-$
+$$
 \boxed{\boldsymbol{\delta}^{(l)} = \left[(\mathbf{W}^{(l+1)})^T \boldsymbol{\delta}^{(l+1)}\right] \odot f'(\mathbf{z}^{(l)})}
-$
+$$
 
 其中 $\odot$ 是 element-wise 相乘 (Hadamard product)。
 
@@ -692,37 +694,37 @@ $
 
 **權重梯度推導：**
 
-$
+$$
 \frac{\partial L}{\partial W_{ij}^{(l)}} = \frac{\partial L}{\partial z_i^{(l)}} \cdot \frac{\partial z_i^{(l)}}{\partial W_{ij}^{(l)}}
-$
+$$
 
 因為 $z_i^{(l)} = \sum_k W_{ik}^{(l)} a_k^{(l-1)} + b_i^{(l)}$：
 
-$
+$$
 \frac{\partial z_i^{(l)}}{\partial W_{ij}^{(l)}} = a_j^{(l-1)}
-$
+$$
 
 所以：
 
-$
+$$
 \frac{\partial L}{\partial W_{ij}^{(l)}} = \delta_i^{(l)} \cdot a_j^{(l-1)}
-$
+$$
 
 **矩陣形式：**
 
-$
+$$
 \boxed{\frac{\partial L}{\partial \mathbf{W}^{(l)}} = \boldsymbol{\delta}^{(l)} (\mathbf{a}^{(l-1)})^T}
-$
+$$
 
 **Bias 梯度：**
 
-$
+$$
 \frac{\partial L}{\partial b_i^{(l)}} = \frac{\partial L}{\partial z_i^{(l)}} \cdot \frac{\partial z_i^{(l)}}{\partial b_i^{(l)}} = \delta_i^{(l)} \cdot 1
-$
+$$
 
-$
+$$
 \boxed{\frac{\partial L}{\partial \mathbf{b}^{(l)}} = \boldsymbol{\delta}^{(l)}}
-$
+$$
 
 ---
 
@@ -730,21 +732,21 @@ $
 
 ### 5.1 標準梯度下降
 
-$
+$$
 \mathbf{W}^{(l)}_{\text{new}} = \mathbf{W}^{(l)}_{\text{old}} - \eta \frac{\partial L}{\partial \mathbf{W}^{(l)}}
-$
+$$
 
 **定義權重調整量：**
 
-$
+$$
 \Delta\mathbf{W}^{(l)} = -\eta \frac{\partial L}{\partial \mathbf{W}^{(l)}} = -\eta \boldsymbol{\delta}^{(l)} (\mathbf{a}^{(l-1)})^T
-$
+$$
 
 **更新規則等價於：**
 
-$
+$$
 \boxed{\mathbf{W}^{(l)} = \mathbf{W}^{(l)} + \Delta\mathbf{W}^{(l)}}
-$
+$$
 
 **注意**：$\Delta\mathbf{W}^{(l)}$ 是**負的**（因為有負號），代表沿著梯度**下降**方向。
 
@@ -772,9 +774,9 @@ $
 
 每次用**全部**訓練資料計算梯度：
 
-$
+$$
 \Delta\mathbf{W}^{(l)} = -\eta \frac{1}{N}\sum_{n=1}^{N} \frac{\partial J^{(n)}}{\partial \mathbf{W}^{(l)}}
-$
+$$
 
 - 優點：穩定，收斂方向準確
 - 缺點：慢，記憶體需求大
@@ -783,9 +785,9 @@ $
 
 每次只用**一個**樣本：
 
-$
+$$
 \Delta\mathbf{W}^{(l)} = -\eta \frac{\partial J^{(n)}}{\partial \mathbf{W}^{(l)}}
-$
+$$
 
 - 優點：快，可以線上學習
 - 缺點：震盪大，不穩定
@@ -794,9 +796,9 @@ $
 
 每次用**一小批** (如 32, 64, 128) 樣本：
 
-$
+$$
 \Delta\mathbf{W}^{(l)} = -\eta \frac{1}{|B|}\sum_{n \in B} \frac{\partial J^{(n)}}{\partial \mathbf{W}^{(l)}}
-$
+$$
 
 - 平衡了速度和穩定性
 - **現代深度學習的標準做法**
@@ -807,24 +809,24 @@ $
 
 加入動量項，加速收斂：
 
-$
+$$
 \begin{aligned}
 \mathbf{v}_t &= \beta \mathbf{v}_{t-1} + \eta \nabla L \\
 \Delta\mathbf{W}^{(l)} &= -\mathbf{v}_t
 \end{aligned}
-$
+$$
 
 **2. Adam (Adaptive Moment Estimation)：**
 
 結合動量和自適應學習率：
 
-$
+$$
 \begin{aligned}
 \mathbf{m}_t &= \beta_1 \mathbf{m}_{t-1} + (1-\beta_1)\mathbf{g}_t \\
 \mathbf{v}_t &= \beta_2 \mathbf{v}_{t-1} + (1-\beta_2)\mathbf{g}_t^2 \\
 \Delta\mathbf{W}^{(l)} &= -\eta \frac{\hat{\mathbf{m}}_t}{\sqrt{\hat{\mathbf{v}}_t} + \epsilon}
 \end{aligned}
-$
+$$
 
 其中 $\mathbf{g}_t = \nabla L$。
 
