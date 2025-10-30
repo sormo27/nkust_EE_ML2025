@@ -570,9 +570,7 @@ $$
 
 對於第 1 層的權重，損失函數的計算路徑是：
 
-$$
-\mathbf{W}^{(1)} \to \mathbf{z}^{(1)} \to \mathbf{a}^{(1)} \to \mathbf{z}^{(2)} \to \cdots \to \mathbf{a}^{(L)} \to L
-$$
+$$\mathbf{W}^{(1)} \to \mathbf{z}^{(1)} \to \mathbf{a}^{(1)} \to \mathbf{z}^{(2)} \to \cdots \to \mathbf{a}^{(L)} \to L$$
 
 需要多次應用 chain rule，計算複雜度極高！
 
