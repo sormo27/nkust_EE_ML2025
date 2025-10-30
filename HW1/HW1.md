@@ -82,7 +82,11 @@ $$\mathbf{w}^* = \sum_{i=1}^{N} \alpha_i^* y_i \mathbf{x}_i$$
 
 **權重調整的完成方式:**
 
-與 MLP 的梯度下降不同,SVM 的訓練**不是**透過 $\mathbf{w}_{\text{new}} = \mathbf{w}_{\text{old}} + \Delta \mathbf{w}$ 逐步迭代,而是通過求解對偶問題**直接**獲得 $\mathbf{w}^*$。只有 $\alpha_i^* > 0$ 的樣本 (即**支持向量**) 對 $\mathbf{w}^*$ 有貢獻。
+與 MLP 的梯度下降不同,SVM 的訓練**不是**透過以下方式逐步迭代:
+
+$$\mathbf{w}_{\text{new}} = \mathbf{w}_{\text{old}} + \Delta\mathbf{w}$$
+
+而是通過求解對偶問題**直接**獲得 $\mathbf{w}^*$。
 
 ### 3.3 最佳偏置 $b^*$ 的確定
 
