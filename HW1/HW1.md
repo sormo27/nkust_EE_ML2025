@@ -1049,6 +1049,4 @@ for epoch in range(1000):
 | **使用 $\Delta\mathbf{w}$** | ✗ | ✓ |
 
 ---
-
-**License:** MIT  
-**最後更新：** 2025-10-30
+ 
