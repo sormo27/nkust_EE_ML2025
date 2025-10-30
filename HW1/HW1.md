@@ -15,7 +15,7 @@
 - **資料點**：$\mathbf{x} = (x_1, x_2)^T$
 - **權重向量**：$\mathbf{w} = (w_1, w_2)^T$
 - **決策邊界**：$\mathbf{w}^T\mathbf{x} + b = 0$
-- **類別標籤**：$y \in \{-1, +1\}$
+- **類別標籤**：$y \in \\{-1, +1\\}$
 
 ### 1.2 Margin 的幾何推導
 
@@ -54,7 +54,9 @@ L = \frac{\mathbf{w}^T(\mathbf{x}_m - \mathbf{x}_n)}{\|\mathbf{w}\|} = \frac{2}{
 $$
 
 > **幾何意義**：
+> 
 > $$\|\mathbf{x}_m - \mathbf{x}_n\| \cdot \cos\theta = L$$
+> 
 > 其中 $\cos\theta = \frac{\mathbf{w}^T(\mathbf{x}_m - \mathbf{x}_n)}{\|\mathbf{w}\| \cdot \|\mathbf{x}_m - \mathbf{x}_n\|}$
 
 **結論：Margin 公式**
@@ -185,15 +187,19 @@ $$
 **KKT 條件包含：**
 
 1. **Stationarity（穩定性）**：
+   
    $$\nabla_{\mathbf{w}} \mathcal{L} = 0, \quad \frac{\partial \mathcal{L}}{\partial b} = 0$$
 
 2. **Primal feasibility（原始可行性）**：
+   
    $$y_i(\mathbf{w}^T\mathbf{x}_i + b) \geq 1$$
 
 3. **Dual feasibility（對偶可行性）**：
+   
    $$\alpha_i \geq 0$$
 
 4. **Complementary slackness（互補鬆弛）**：
+   
    $$\alpha_i[y_i(\mathbf{w}^T\mathbf{x}_i + b) - 1] = 0$$
 
 **互補鬆弛的意義**：
@@ -830,61 +836,9 @@ $
 
 ---
 
-## 六、完整訓練演算法
+## 六、SVM vs MLP 完整對比
 
-```
-【MLP 訓練流程】
-
-輸入：訓練資料 {(xₙ, yₙ)}ₙ₌₁ᴺ, learning rate η, epochs T
-
-步驟 1: 初始化
-  隨機初始化所有 W⁽ˡ⁾, b⁽ˡ⁾
-  (常用 Xavier 或 He initialization)
-
-步驟 2: 訓練循環
-  For epoch = 1 to T:
-    
-    For each mini-batch B:
-      
-      # Forward Propagation
-      a⁽⁰⁾ = x
-      For l = 1 to L:
-        z⁽ˡ⁾ = W⁽ˡ⁾·a⁽ˡ⁻¹⁾ + b⁽ˡ⁾
-        a⁽ˡ⁾ = f(z⁽ˡ⁾)
-      
-      # 計算 Loss
-      L = Loss(a⁽ᴸ⁾, y)
-      
-      # Backpropagation
-      δ⁽ᴸ⁾ = ∂L/∂a⁽ᴸ⁾ ⊙ f'(z⁽ᴸ⁾)
-      
-      For l = L-1 down to 1:
-        δ⁽ˡ⁾ = [(W⁽ˡ⁺¹⁾)ᵀ·δ⁽ˡ⁺¹⁾] ⊙ f'(z⁽ˡ⁾)
-      
-      # 計算梯度
-      For l = 1 to L:
-        ∂L/∂W⁽ˡ⁾ = δ⁽ˡ⁾·(a⁽ˡ⁻¹⁾)ᵀ
-        ∂L/∂b⁽ˡ⁾ = δ⁽ˡ⁾
-      
-      # 更新權重（關鍵步驟！）
-      For l = 1 to L:
-        ΔW⁽ˡ⁾ = -η·∂L/∂W⁽ˡ⁾
-        Δb⁽ˡ⁾ = -η·∂L/∂b⁽ˡ⁾
-        
-        W⁽ˡ⁾ ← W⁽ˡ⁾ + ΔW⁽ˡ⁾  ← 每次迭代都執行
-        b⁽ˡ⁾ ← b⁽ˡ⁾ + Δb⁽ˡ⁾
-    
-    If Loss 收斂:
-      Break
-
-輸出：訓練好的模型 {W⁽ˡ⁾, b⁽ˡ⁾}
-```
-
----
-
-## 七、SVM vs MLP 完整對比
-
-### 7.1 數學性質對比
+### 6.1 數學性質對比
 
 | 項目 | SVM | MLP |
 |------|-----|-----|
@@ -894,7 +848,7 @@ $
 | **最優性** | Global optimum | Local optimum |
 | **解的唯一性** | 唯一（在嚴格凸情況下） | 不唯一（多個局部最優） |
 
-### 7.2 演算法對比
+### 6.2 演算法對比
 
 | 項目 | SVM | MLP |
 |------|-----|-----|
@@ -905,7 +859,7 @@ $
 | **權重計算** | $\mathbf{w}^* = \sum \alpha_i^* y_i \mathbf{x}_i$ | 直接最佳化 $\mathbf{W}$ |
 | **計算次數** | $\mathbf{w}$ 只算一次 | $\mathbf{W}$ 每次迭代都更新 |
 
-### 7.3 權重調整方式的本質差異
+### 6.3 權重調整方式的本質差異
 
 **SVM：**
 ```
@@ -933,7 +887,7 @@ $
 ✓ 需要多次迭代逐步逼近
 ```
 
-### 7.4 為什麼有這些差異？
+### 6.4 為什麼有這些差異？
 
 **根本原因：問題性質不同**
 
@@ -951,9 +905,9 @@ $
 
 ---
 
-## 八、實務建議
+## 七、實務建議
 
-### 8.1 何時用 SVM？
+### 7.1 何時用 SVM？
 
 ✅ **適合的情況：**
 - 資料維度高但樣本數少（$d > N$）
@@ -966,7 +920,7 @@ $
 - 需要多層非線性轉換
 - 需要 end-to-end 學習（如影像、語音）
 
-### 8.2 何時用 MLP？
+### 7.2 何時用 MLP？
 
 ✅ **適合的情況：**
 - 大量訓練資料
@@ -981,9 +935,9 @@ $
 
 ---
 
-## 九、Python 簡單實作對比
+## 八、Python 簡單實作對比
 
-### 9.1 SVM 實作
+### 8.1 SVM 實作
 
 ```python
 from sklearn.svm import SVC
@@ -1006,7 +960,7 @@ print(f"驗證: {w_manual}")
 print(f"Support Vectors: {len(sv)} / {len(X_train)}")
 ```
 
-### 9.2 MLP 實作
+### 8.2 MLP 實作
 
 ```python
 import numpy as np
@@ -1066,7 +1020,7 @@ for epoch in range(1000):
 
 ---
 
-## 十、總結
+## 九、總結
 
 ### 核心差異
 
@@ -1099,5 +1053,4 @@ for epoch in range(1000):
 ---
 
 **License:** MIT  
-**作者：** [Your Name]  
 **最後更新：** 2025-10-30
