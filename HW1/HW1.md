@@ -19,7 +19,7 @@
 - **決策邊界**：
   $\mathbf{w}^T\mathbf{x} + b = 0$
 - **類別標籤**：
-  $y \in \\{-1, +1\\}$
+  $y \in \{-1,+1\}$
 
 ### 1.2 Margin 的幾何推導
 
@@ -129,23 +129,17 @@ $$
 
 前面加 $\frac{1}{2}$ 是為了求導後消掉係數 2。
 
-### 2.3 完整的原始問題 (Primal Problem)
+### 2.3 完整的原始問題 (Primal, Soft Margin)
 
 $$
 \begin{aligned}
-\min_{\mathbf{w}, b} \quad & \frac{1}{2}\|\mathbf{w}\|^2 \\
-\text{s.t.} \quad & y_i(\mathbf{w}^T\mathbf{x}_i + b) \geq 1, \quad i = 1, \ldots, N
+\min_{\mathbf{w},\,b,\,\boldsymbol{\xi}} \quad & \tfrac{1}{2}\lVert\mathbf{w}\rVert^2 + C\sum_{i=1}^N \xi_i \\
+\text{s.t.}\quad & y_i(\mathbf{w}^{\top}\mathbf{x}_i + b) \ge 1 - \xi_i, \\
+& \xi_i \ge 0, \quad i=1,\ldots,N .
 \end{aligned}
 $$
 
-**約束條件的意義**：
-
-- $y_i = +1$
-  時：
-  $\mathbf{w}^T\mathbf{x}_i + b \geq +1$ （正類在正邊界外側）
-- $y_i = -1$
-  時：
-  $\mathbf{w}^T\mathbf{x}_i + b \leq -1$ （負類在負邊界外側）
+> 若資料線性可分，令 $C\to\infty$ 即退化為硬間隔。
 
 ---
 
