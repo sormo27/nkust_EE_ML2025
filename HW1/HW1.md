@@ -935,13 +935,7 @@ $$
 
 ---
 
-## 七、Python 簡單實作對比
-
-https://colab.research.google.com/drive/1JD4PjnDqjtbm5ZqbWrmj8fVXr_wKbbDd?usp=sharing
-
----
-
-## 八、總結
+## 七、總結
 
 ### 核心差異
 
@@ -970,6 +964,10 @@ https://colab.research.google.com/drive/1JD4PjnDqjtbm5ZqbWrmj8fVXr_wKbbDd?usp=sh
 | **更新公式** | $\alpha \leftarrow \alpha + \Delta\alpha$ | $\mathbf{W} \leftarrow \mathbf{W} + \Delta\mathbf{W}$ |
 | **權重公式** | $\mathbf{w}^* = \sum \alpha_i^* y_i \mathbf{x}_i$ | $\mathbf{W}^* = \mathbf{W} - \eta\nabla L$ |
 | **使用 $\Delta\mathbf{w}$** | ✗ | ✓ |
+
+### Colab 上簡單實作對比
+
+https://colab.research.google.com/drive/1JD4PjnDqjtbm5ZqbWrmj8fVXr_wKbbDd?usp=sharing
 
 ---
  
