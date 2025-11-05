@@ -12,17 +12,23 @@
 
 考慮二維空間中的線性分類問題：
 
-- **資料點**：$\mathbf{x} = (x_1, x_2)^T$
-- **權重向量**：$\mathbf{w} = (w_1, w_2)^T$
-- **決策邊界**：$\mathbf{w}^T\mathbf{x} + b = 0$
-- **類別標籤**：$y \in \\{-1, +1\\}$
+- **資料點**：
+  $\mathbf{x} = (x_1, x_2)^T$
+- **權重向量**：
+  $\mathbf{w} = (w_1, w_2)^T$
+- **決策邊界**：
+  $\mathbf{w}^T\mathbf{x} + b = 0$
+- **類別標籤**：
+  $y \in \\{-1, +1\\}$
 
 ### 1.2 Margin 的幾何推導
 
 **定義兩條平行邊界線：**
 
-- 正類邊界：$\mathbf{w}^T\mathbf{x} + b = +1$
-- 負類邊界：$\mathbf{w}^T\mathbf{x} + b = -1$
+- 正類邊界：
+  $\mathbf{w}^T\mathbf{x} + b = +1$
+- 負類邊界：
+  $\mathbf{w}^T\mathbf{x} + b = -1$
 
 **在兩邊界上任取兩點 $\mathbf{x}_m$ 和 $\mathbf{x}_n$：**
 
@@ -111,8 +117,10 @@ $$
 
 為什麼要平方？
 
-1. **便於求導**：$\|\mathbf{w}\| = \sqrt{w_1^2 + w_2^2}$ 有根號，求導複雜
-2. **單調性不變**：在 $\|\mathbf{w}\| > 0$ 時，$f(x) = x^2$ 單調遞增
+1. **便於求導**：
+$\|\mathbf{w}\| = \sqrt{w_1^2 + w_2^2}$ 有根號，求導複雜
+2. **單調性不變**：在 $\|\mathbf{w}\| > 0$ 時，
+$f(x) = x^2$ 單調遞增
 3. **數學性質好**：二次函數平滑，優化理論成熟
 
 $$
@@ -132,8 +140,12 @@ $$
 
 **約束條件的意義**：
 
-- $y_i = +1$ 時：$\mathbf{w}^T\mathbf{x}_i + b \geq +1$ （正類在正邊界外側）
-- $y_i = -1$ 時：$\mathbf{w}^T\mathbf{x}_i + b \leq -1$ （負類在負邊界外側）
+- $y_i = +1$
+  時：
+  $\mathbf{w}^T\mathbf{x}_i + b \geq +1$ （正類在正邊界外側）
+- $y_i = -1$
+  時：
+  $\mathbf{w}^T\mathbf{x}_i + b \leq -1$ （負類在負邊界外側）
 
 ---
 
@@ -289,9 +301,13 @@ $$
 
 **SVM 對偶問題的特點：**
 
-1. **目標函數是二次的**：含有 $\alpha_i \alpha_j$ 項
-2. **約束是線性的**：$\sum \alpha_i y_i = 0$ 和 $\alpha_i \geq 0$
-3. **目標函數是凸的**：$Q$ 矩陣半正定（因為是 Gram matrix）
+1. **目標函數是二次的**：含有 
+$\alpha_i \alpha_j$ 項
+2. **約束是線性的**： 
+$\sum \alpha_i y_i = 0$ 和
+$\alpha_i \geq 0$
+3. **目標函數是凸的**：
+$Q$ 矩陣半正定（因為是 Gram matrix）
 
 ### 5.2 為什麼 QP 很重要？
 
@@ -317,8 +333,10 @@ $$
 
 **標準 QP solver 的問題：**
 
-- 時間複雜度：$O(N^3)$（$N$ 是樣本數）
-- 空間複雜度：$O(N^2)$（需要存儲整個 Q 矩陣）
+- 時間複雜度：
+  $O(N^3)$（$N$ 是樣本數）
+- 空間複雜度：
+  $O(N^2)$（需要存儲整個 Q 矩陣）
 - 當 $N$ 很大時（如 10,000+ 樣本），幾乎不可行
 
 ### 6.2 SMO 的核心思想
@@ -361,7 +379,9 @@ $$
 
 1. **不需要存儲 Q 矩陣**：只計算需要的元素
 2. **時間複雜度**：實際約 $O(N^2)$ 到 $O(N^{2.3})$
-3. **記憶體效率**：$O(N)$ 而非 $O(N^2)$
+3. **記憶體效率**： 
+$O(N)$ 而非
+$O(N^2)$
 4. **簡單實作**：每個子問題都有閉式解
 
 ---
@@ -396,8 +416,14 @@ $$
 **數學原因：**
 
 1. **對偶問題更簡單**：
-   - Primal: 變數 = $d + 1$（$w$ 的維度 + $b$）+ $N$ 個約束
-   - Dual: 變數 = $N$（$\alpha$ 的個數），但只有 1 個等式約束
+   - Primal: 變數 =
+     $d + 1$（
+     $w$ 的維度 +
+     $b$）+
+     $N$ 個約束
+   - Dual: 變數 =
+     $N$（
+     $\alpha$ 的個數），但只有 1 個等式約束
 
 2. **Kernel trick**：
    - 對偶問題中只出現 $\mathbf{x}_i^T\mathbf{x}_j$（內積）
@@ -409,7 +435,7 @@ $$
    - 只有 Support Vectors ($\alpha_i > 0$) 對 $\mathbf{w}^*$ 有貢獻
    - 典型情況：只有 10-30% 的樣本是 SV
 
-### 7.3 計算 $\mathbf{w}^*$ 和 $b^*$
+### 7.3 計算 $\mathbf{w}^{\ast}$ 和 $b^{\ast}$
 
 **計算 $\mathbf{w}^*$：**
 
@@ -421,7 +447,7 @@ $$
 
 **計算 $b^*$：**
 
-選擇任一 Support Vector $\mathbf{x}_k$（滿足 $0 < \alpha_k^* < C$），利用 $y_k(\mathbf{w}^{*T}\mathbf{x}_k + b^*) = 1$：
+選擇任一 Support Vector $\mathbf{x}_k$（滿足 $0 < \alpha_k^\* < C$），利用 $y_k(\mathbf{w}^{\*T}\mathbf{x}_k + b^\*) = 1$：
 
 $$
 b^* = y_k - \mathbf{w}^{*T}\mathbf{x}_k
@@ -475,9 +501,12 @@ $$
 
 考慮 $L$ 層神經網路：
 
-- **輸入層**：$\mathbf{a}^{(0)} = \mathbf{x} \in \mathbb{R}^{d}$
-- **隱藏層** $l = 1, \ldots, L-1$
-- **輸出層**：$l = L$
+- **輸入層**：
+  $\mathbf{a}^{(0)} = \mathbf{x} \in \mathbb{R}^{d}$
+- **隱藏層**：
+  $l = 1, \ldots, L-1$
+- **輸出層**：
+  $l = L$
 
 ### 1.2 第 $l$ 層的計算
 
@@ -590,7 +619,9 @@ $$
 
 **為什麼定義這個？**
 
-1. 便於遞推：$\boldsymbol{\delta}^{(l)}$ 可以從 $\boldsymbol{\delta}^{(l+1)}$ 計算
+1. 便於遞推： 
+$\boldsymbol{\delta}^{(l)}$ 可以從
+$\boldsymbol{\delta}^{(l+1)}$ 計算
 2. 計算權重梯度時會用到
 
 ---
@@ -748,7 +779,8 @@ $$
 \boxed{\mathbf{W}^{(l)} = \mathbf{W}^{(l)} + \Delta\mathbf{W}^{(l)}}
 $$
 
-**注意**：$\Delta\mathbf{W}^{(l)}$ 是**負的**（因為有負號），代表沿著梯度**下降**方向。
+**注意**：
+$\Delta\mathbf{W}^{(l)}$ 是**負的**（因為有負號），代表沿著梯度**下降**方向。
 
 ### 5.2 為什麼 MLP 使用這種更新方式？
 
@@ -903,122 +935,13 @@ $$
 
 ---
 
-## 七、實務建議
+## 七、Python 簡單實作對比
 
-### 7.1 何時用 SVM？
-
-✅ **適合的情況：**
-- 資料維度高但樣本數少（$d > N$）
-- 需要理論保證（convex optimization）
-- 想要稀疏解（只用部分樣本）
-- 資料可能線性可分或用 kernel 可分
-
-❌ **不適合的情況：**
-- 樣本數超大（>100,000）
-- 需要多層非線性轉換
-- 需要 end-to-end 學習（如影像、語音）
-
-### 7.2 何時用 MLP？
-
-✅ **適合的情況：**
-- 大量訓練資料
-- 複雜的非線性關係
-- 需要多層特徵抽取
-- 可以用 GPU 加速
-
-❌ **不適合的情況：**
-- 訓練資料很少（容易 overfit）
-- 需要理論保證
-- 資源有限（訓練時間長）
+https://colab.research.google.com/drive/1JD4PjnDqjtbm5ZqbWrmj8fVXr_wKbbDd?usp=sharing
 
 ---
 
-## 八、Python 簡單實作對比
-
-### 8.1 SVM 實作
-
-```python
-from sklearn.svm import SVC
-import numpy as np
-
-# 訓練 SVM
-svm = SVC(kernel='linear', C=1.0)
-svm.fit(X_train, y_train)
-
-# 取得結果
-w_star = svm.coef_[0]      # 直接得到 w*
-b_star = svm.intercept_[0]
-alpha = svm.dual_coef_[0]  # dual variables
-sv = svm.support_vectors_
-
-# 驗證: w* = Σ αᵢyᵢxᵢ
-w_manual = np.sum(alpha[:, np.newaxis] * sv, axis=0)
-print(f"w* = {w_star}")
-print(f"驗證: {w_manual}")
-print(f"Support Vectors: {len(sv)} / {len(X_train)}")
-```
-
-### 8.2 MLP 實作
-
-```python
-import numpy as np
-
-class SimpleMLP:
-    def __init__(self, sizes):
-        # 初始化權重
-        self.W = [np.random.randn(y, x) * 0.01 
-                  for x, y in zip(sizes[:-1], sizes[1:])]
-        self.b = [np.zeros((y, 1)) for y in sizes[1:]]
-    
-    def forward(self, x):
-        a = x
-        self.activations = [a]
-        self.zs = []
-        
-        for W, b in zip(self.W, self.b):
-            z = W @ a + b
-            a = sigmoid(z)
-            self.zs.append(z)
-            self.activations.append(a)
-        return a
-    
-    def backward(self, x, y, lr):
-        # Backpropagation
-        delta = (self.activations[-1] - y) * sigmoid_prime(self.zs[-1])
-        
-        deltas = [delta]
-        for l in range(len(self.W)-1, 0, -1):
-            delta = (self.W[l].T @ delta) * sigmoid_prime(self.zs[l-1])
-            deltas.insert(0, delta)
-        
-        # 更新權重: W = W + ΔW
-        for l in range(len(self.W)):
-            grad_W = deltas[l] @ self.activations[l].T
-            grad_b = deltas[l]
-            
-            delta_W = -lr * grad_W  # 計算 ΔW
-            delta_b = -lr * grad_b
-            
-            self.W[l] += delta_W  # 關鍵：W = W + ΔW
-            self.b[l] += delta_b
-
-def sigmoid(z):
-    return 1 / (1 + np.exp(-z))
-
-def sigmoid_prime(z):
-    return sigmoid(z) * (1 - sigmoid(z))
-
-# 使用
-mlp = SimpleMLP([2, 4, 1])
-for epoch in range(1000):
-    for x, y in zip(X_train, y_train):
-        mlp.forward(x)
-        mlp.backward(x, y, lr=0.1)  # 每次都更新 W
-```
-
----
-
-## 九、總結
+## 八、總結
 
 ### 核心差異
 
