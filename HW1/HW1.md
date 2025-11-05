@@ -461,9 +461,9 @@ $$
 ```
 
 **關鍵點**：
-- ✅ 更新的是 $\alpha$，不是 $\mathbf{w}$
-- ✅ $\mathbf{w}^*$ 在最後一次性計算
-- ✅ 不使用 $\mathbf{w} = \mathbf{w} + \Delta\mathbf{w}$ 的形式
+- 更新的是 $\alpha$，不是 $\mathbf{w}$
+- $\mathbf{w}^*$ 在最後一次性計算
+- 不使用 $\mathbf{w} = \mathbf{w} + \Delta\mathbf{w}$ 的形式
 
 ---
 
