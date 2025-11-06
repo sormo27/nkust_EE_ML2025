@@ -215,7 +215,7 @@ $$
 - 約束可能在最優點處**不活躍** (inactive)
 - 需要判斷哪些約束是 binding（等號成立）
 
-### 3.2 含鬆弛變數的 Lagrange 引入
+### 3.2 含鬆弛變數的 Lagrange 引入（先 Hard-Margin，後 Soft-Margin）
 
 **核心思想**：將約束條件轉化為懲罰項
 
@@ -422,10 +422,12 @@ $$
 \begin{aligned}
 \max_{\boldsymbol{\alpha}} \quad & W(\boldsymbol{\alpha}) = \sum_{i=1}^{N} \alpha_i - \frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N} \alpha_i \alpha_j y_i y_j (\mathbf{x}_i^T\mathbf{x}_j) \\
 \text{s.t.} \quad & \sum_{i=1}^{N} \alpha_i y_i = 0 \\
-& \alpha_i \geq 0, \quad i = 1, \ldots, N
+& 0 \le \alpha_i \le C, \quad i = 1, \ldots, N
 \end{aligned}
 }
 $$
+
+> 我們將代數化簡的結果 $W(\boldsymbol{\alpha})$ 與從 KKT 條件 (Sec 3.3 和 4.1) 推導出的**所有約束**結合起來
 
 ---
 
@@ -445,13 +447,9 @@ $$
 
 **SVM 對偶問題的特點：**
 
-1. **目標函數是二次的**：含有 
-$\alpha_i \alpha_j$ 項
-2. **約束是線性的**： 
-$\sum \alpha_i y_i = 0$ 和
-$\alpha_i \geq 0$
-3. **目標函數是凸的**：
-$Q$ 矩陣半正定（因為是 Gram matrix）
+1. **目標函數是二次的**：含有 $\alpha_i \alpha_j$ 項
+2. **約束是線性的**： $\sum \alpha_i y_i = 0$ 和 $0 \le \alpha_i \le C$
+3. **目標函數是凸的**： $Q$ 矩陣半正定（因為是 Gram matrix）
 
 ### 5.2 為什麼 QP 很重要？
 
@@ -512,7 +510,7 @@ $$
 $$
 \begin{aligned}
 \max \quad & L(\alpha_i, \alpha_j) \\
-\text{s.t.} \quad & \alpha_i y_i + \alpha_j y_j = C \text{ (常數)} \\
+\text{s.t.} \quad & \alpha_i y_i + \alpha_j y_j = K \text{ (常數)} \\
 & 0 \leq \alpha_i, \alpha_j \leq C
 \end{aligned}
 $$
@@ -560,21 +558,22 @@ $O(N^2)$
 **數學原因：**
 
 1. **對偶問題更簡單**：
-   - Primal: 變數 =
-     $d + 1$（
-     $w$ 的維度 +
-     $b$）+
-     $N$ 個約束
-   - Dual: 變數 =
-     $N$（
-     $\alpha$ 的個數），但只有 1 個等式約束
+   
+   - Primal: 變數 = $d + 1 + N$（
+   $\mathbf{w}, b, \boldsymbol{\xi}$）+
+   $2N$ 個約束
+   
+   - Dual: 變數 = $N$（
+   $\boldsymbol{\alpha}$），但只有 1 個等式約束和
+   $N$ 個盒約束 (
+   $0 \le \alpha_i \le C$)
 
-2. **Kernel trick**：
+3. **Kernel trick**：
    - 對偶問題中只出現 $\mathbf{x}_i^T\mathbf{x}_j$（內積）
    - 可以替換成 kernel function $K(\mathbf{x}_i, \mathbf{x}_j)$
    - 實現**非線性分類**而無需顯式計算高維 $\mathbf{w}$
 
-3. **稀疏性**：
+4. **稀疏性**：
    - 大部分 $\alpha_i = 0$
    - 只有 Support Vectors ($\alpha_i > 0$) 對 $\mathbf{w}^*$ 有貢獻
    - 典型情況：只有 10-30% 的樣本是 SV
@@ -597,11 +596,13 @@ $$
 b^* = y_k - \mathbf{w}^{*T}\mathbf{x}_k
 $$
 
-實務上對所有 SV 求平均更穩定：
+實務上對所有**在邊界上**的 SV (滿足 $0 < \alpha_k^\* < C$) 求平均更穩定：
 
 $$
-b^* = \frac{1}{|SV|}\sum_{k \in SV}\left(y_k - \mathbf{w}^{*T}\mathbf{x}_k\right)
+b^\* = \frac{1}{|SV_{non-bound}|}\sum_{k \in SV_{non-bound}}\left(y_k - \mathbf{w}^{\*T}\mathbf{x}_k\right)
 $$
+
+> 只對 $0 < \alpha_k < C$ 的點求平均
 
 ---
 
@@ -624,8 +625,8 @@ $$
 步驟 3: 計算 w*（只執行一次）
   w* ← Σ αᵢ* yᵢ xᵢ  (只對 Support Vectors 求和)
 
-步驟 4: 計算 b*
-  b* ← 平均值 of (yₖ - w*ᵀxₖ) over Support Vectors
+步驟 4: 計算 b\*
+  b\* ← 平均值 of (yₖ - w\*ᵀxₖ) over non-bound Support Vectors (0 < αₖ\* < C)
 
 輸出：決策函數 f(x) = sign(w*ᵀx + b*)
 ```
