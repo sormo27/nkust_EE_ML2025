@@ -19,7 +19,7 @@
 - **決策邊界**：
   $\mathbf{w}^T\mathbf{x} + b = 0$
 - **類別標籤**：
-  $y \in \{-1,+1\}$
+  $y \in \\{ -1 , +1 \\}$
 
 ### 1.2 Margin 的幾何推導
 
@@ -131,15 +131,69 @@ $$
 
 ### 2.3 完整的原始問題 (Primal, Soft Margin)
 
-$$
-\begin{aligned}
-\min_{\mathbf{w},\,b,\,\boldsymbol{\xi}} \quad & \tfrac{1}{2}\lVert\mathbf{w}\rVert^2 + C\sum_{i=1}^N \xi_i \\
-\text{s.t.}\quad & y_i(\mathbf{w}^{\top}\mathbf{x}_i + b) \ge 1 - \xi_i, \\
-& \xi_i \ge 0, \quad i=1,\ldots,N .
-\end{aligned}
-$$
+在 2.2 節，我們推導出「最大化 Margin」等同於：
 
-> 若資料線性可分，令 $C\to\infty$ 即退化為硬間隔。
+$$\min \frac{1}{2}\|\mathbf{w}\|^2$$
+
+為了達成這個目標，我們需要一個「約束條件」：所有資料點都必須在 Margin 之外，也就是：
+
+$$y_i(\mathbf{w}^T\mathbf{x}_i + b) \ge 1$$
+
+這被稱為**硬間隔 (Hard Margin)**。它要求資料必須 100% 線性可分，不允許任何一個點出錯。
+
+### 實際上 (Soft Margin)
+
+在現實世界的資料中，「硬間隔」幾乎不可能實現，因為有：
+
+雜訊 (Noise)
+
+離群值 (Outliers)
+
+> 資料本身就不是完全線性可分的，如果我們堅持使用硬間隔，模型會因為一兩個壞點而產生一個非常差（非常窄）的 Margin，甚至根本找不到解。
+
+### 引入「鬆弛變數」 (Slack Variables) $\xi_i$
+
+為了「軟化」這個嚴格的約束，我們為每一個資料點 $\mathbf{x}_i$ 引入一個「鬆弛變數」 $\xi_i$（讀作 "xi"）。
+
+$\xi_i$ 代表點 $\mathbf{x}_i$ 被允許「犯規」的程度。
+
+我們要求 $\xi_i \ge 0$。
+
+現在，我們修改原來的約束：
+
+舊約束 ( Hard )： $y_i(\mathbf{w}^T\mathbf{x}_i + b) \ge 1$
+
+新約束 ( Soft )： $y_i(\mathbf{w}^T\mathbf{x}_i + b) \ge 1 - \xi_i$
+
+> 這個新約束的意義：
+
+> 如果 $\xi_i = 0$：代表 $y_i(\mathbf{w}^T\mathbf{x}_i + b) \ge 1$。這個點是「乖」的，在 Margin 之外。
+
+> 如果 $0 < \xi_i < 1$：這個點在 Margin 之內，但仍然在正確的一側。
+
+> 如果 $\xi_i \ge 1$：這個點被錯誤分類了（跑到決策線的另一邊）。
+
+### 接下來將「鬆弛」加入到「目標」中
+
+我們希望 $\xi_i$ 盡可能小（我們不希望點隨便犯規）。因此，我們需要最小化所有點的總犯規程度 $\sum \xi_i$。
+
+現在我們有兩個互相衝突的目標：
+
+$\min \frac{1}{2}\|\mathbf{w}\|^2$ （Margin 越大越好）
+
+$\min \sum \xi_i$ （犯規的點越少越好）
+
+我們使用一個超參數 $C$ 來平衡這兩者，把它們寫成一個新的目標函數：
+
+$$\min_{\mathbf{w}\,b,\\boldsymbol{\xi}} \quad \frac{1}{2}\|\mathbf{w}\|^2 + C\sum_{i=1}^N \xi_i$$
+
+> $C$ 的意義 (trade-off)：
+
+> $C$ 很大 (例如 $C \to \infty$)：代表「犯規的成本 ($C\sum \xi_i$)」非常高。模型會不惜一切代價讓 $\xi_i$ 趨近於 0，這就退化成了硬間隔。
+
+> $C$ 很小：代表模型「不太在乎犯規」。它會更專注於 $\min \frac{1}{2}\|\mathbf{w}\|^2$，也就是找出一個更寬的 Margin，即使這意味著犧牲掉一些點（讓它們犯規）。
+
+
 
 ---
 
