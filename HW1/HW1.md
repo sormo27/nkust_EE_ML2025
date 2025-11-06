@@ -197,7 +197,7 @@ $$\min_{\mathbf{w}\,b,\\boldsymbol{\xi}} \quad \frac{1}{2}\|\mathbf{w}\|^2 + C\s
 
 ---
 
-## 三、為什麼用 Lagrange 對偶？
+## 三、為什麼用 Lagrange Dual？
 
 ### 3.1 原始問題的困難
 
@@ -215,7 +215,7 @@ $$
 - 約束可能在最優點處**不活躍** (inactive)
 - 需要判斷哪些約束是 binding（等號成立）
 
-### 3.2 Lagrange 乘子法的引入
+### 3.2 含鬆弛變數的 Lagrange 引入
 
 **核心思想**：將約束條件轉化為懲罰項
 
@@ -234,36 +234,132 @@ $$
 \boxed{\mathcal{L}(\mathbf{w}, b, \boldsymbol{\alpha}) = \frac{1}{2}\|\mathbf{w}\|^2 - \sum_{i=1}^{N} \alpha_i[y_i(\mathbf{w}^T\mathbf{x}_i + b) - 1]}
 $$
 
-**為什麼是減號？**
+>　**為什麼是減號？**
 
-因為約束是 $1 - y_i(\mathbf{w}^T\mathbf{x}_i + b) \leq 0$，重寫為 $y_i(\mathbf{w}^T\mathbf{x}_i + b) - 1 \geq 0$，所以用減號。
+> 因為約束是 $1 - y_i(\mathbf{w}^T\mathbf{x}_i + b) \leq 0$，重寫為 $y_i(\mathbf{w}^T\mathbf{x}_i + b) - 1 \geq 0$，所以用減號。
 
-### 3.3 為什麼要用 KKT 條件？
+**含鬆弛變數的 Lagrange:**
 
-**KKT (Karush-Kuhn-Tucker) 條件** 是含不等式約束最佳化問題的必要條件。
+$$
+\mathcal{L}(\mathbf{w},b,\boldsymbol{\xi},\boldsymbol{\alpha},\boldsymbol{\mu})= \frac{1}{2}\|\mathbf{w}\|^2 + C\sum_{i=1}^N \xi_i- \sum_{i=1}^N \alpha_i \left[y_i(\mathbf{w}^{\top}\mathbf{x}_i+b)-1+\xi_i\right]- \sum_{i=1}^N \mu_i \xi_i
+$$
 
-**KKT 條件包含：**
+其中 $(\alpha_i\ge 0,\ \mu_i\ge 0)$。
 
-1. **Stationarity（穩定性）**：
-   
-   $$\nabla_{\mathbf{w}} \mathcal{L} = 0, \quad \frac{\partial \mathcal{L}}{\partial b} = 0$$
+### 3.3 KKT 條件
+KKT 條件是從 3.2 的 Lagrangian 函數推導出來的，具體來說，**「Stationarity (穩定性)」條件是透過對 3.2 的 $\mathcal{L}$ 函數分別取偏微分**，並令其等於 0 而得到的。
+KKT 條件是求解一個「帶約束的最佳化問題」的必要條件。「Stationarity (穩定性)」是 KKT 條件的核心，它要求 Lagrangian $\mathcal{L}$ 對所有原始變數($\mathbf{w}$, $b$, $\xi_i$) 的偏微分都必須為 0。
 
-2. **Primal feasibility（原始可行性）**：
-   
-   $$y_i(\mathbf{w}^T\mathbf{x}_i + b) \geq 1$$
+**3.2 節的 Lagrangian 函數是：**
 
-3. **Dual feasibility（對偶可行性）**：
-   
-   $$\alpha_i \geq 0$$
+$$
+\mathcal{L}(\mathbf{w},b,\boldsymbol{\xi},\boldsymbol{\alpha},\boldsymbol{\mu})= \frac{1}{2}\|\mathbf{w}\|^2 + C\sum_{i=1}^N \xi_i- \sum_{i=1}^N \alpha_i \left[y_i(\mathbf{w}^{\top}\mathbf{x}_i+b)-1+\xi_i\right]- \sum_{i=1}^N \mu_i \xi_i
+$$
 
-4. **Complementary slackness（互補鬆弛）**：
-   
-   $$\alpha_i[y_i(\mathbf{w}^T\mathbf{x}_i + b) - 1] = 0$$
+#### $\mathbf{w}$ 的偏微分 ($\frac{\partial \mathcal{L}}{\partial \mathbf{w}}$)
 
-**互補鬆弛的意義**：
+我們只看 $\mathcal{L}$ 中含有 $\mathbf{w}$ 的項：
 
-- 若 $\alpha_i > 0$，則 $y_i(\mathbf{w}^T\mathbf{x}_i + b) = 1$ → 該點是 **Support Vector**
-- 若 $y_i(\mathbf{w}^T\mathbf{x}_i + b) > 1$，則 $\alpha_i = 0$ → 該點不影響決策邊界
+- $\frac{1}{2}\|\mathbf{w}\|^2 = \frac{1}{2}\mathbf{w}^T\mathbf{w}$
+
+- $-\sum \alpha_i y_i (\mathbf{w}^T\mathbf{x}_i)$
+
+#### 對 $\mathbf{w}$ 求偏導（使用向量微積分 $\frac{\partial}{\partial \mathbf{v}}(\mathbf{v}^T\mathbf{a}) = \mathbf{a}$ 和 $\frac{\partial}{\partial \mathbf{v}}(\mathbf{v}^T\mathbf{v}) = 2\mathbf{v}$）：
+
+$$\frac{\partial \mathcal{L}}{\partial \mathbf{w}} = \frac{\partial}{\partial \mathbf{w}}\left(\frac{1}{2}\mathbf{w}^T\mathbf{w}\right) - \frac{\partial}{\partial \mathbf{w}}\left(\sum \alpha_i y_i \mathbf{w}^T\mathbf{x}_i\right) + 0 + 0$$
+
+$$\frac{\partial \mathcal{L}}{\partial \mathbf{w}} = \mathbf{w} - \sum \alpha_i y_i \mathbf{x}_i$$
+
+#### 令其等於 0：
+
+$$\mathbf{w} - \sum \alpha_i y_i \mathbf{x}_i = 0 \quad \Rightarrow \quad \boxed{\mathbf{w}^* = \sum \alpha_i y_i \mathbf{x}_i}$$
+
+> 這就是 Stationarity 的第一行
+
+#### $b$ 的偏微分 ($\frac{\partial \mathcal{L}}{\partial b}$)
+
+我們只看 $\mathcal{L}$ 中含有 $b$ 的項：
+
+- $-\sum \alpha_i y_i b$
+
+#### 對 $b$ 求偏導：
+
+$$\frac{\partial \mathcal{L}}{\partial b} = 0 + 0 - \frac{\partial}{\partial b}\left(\sum \alpha_i y_i b\right) - 0$$
+
+$$\frac{\partial \mathcal{L}}{\partial b} = - \sum \alpha_i y_i$$
+
+#### 令其等於 0：
+
+$$- \sum \alpha_i y_i = 0 \quad \Rightarrow \quad \boxed{\sum \alpha_i y_i = 0}$$
+
+> 這就是Stationarity 的第二行
+
+#### $\xi_i$ 的偏微分 ($\frac{\partial \mathcal{L}}{\partial \xi_i}$)
+
+我們只看 $\mathcal{L}$ 中含有單一 $\xi_i$ 的項（注意 $\sum$ 是對所有 $i$ 求和）：
+
+- $C \xi_i$ （來自 $C\sum\xi_i$）
+
+- $-\alpha_i \xi_i$ （來自 $-\sum \alpha_i[... + \xi_i]$）
+
+- $-\mu_i \xi_i$ （來自 $-\sum \mu_i\xi_i$）
+
+#### 對單一 $\xi_i$ 求偏導：
+
+$$\frac{\partial \mathcal{L}}{\partial \xi_i} = 0 + \frac{\partial}{\partial \xi_i}(C \xi_i) - \frac{\partial}{\partial \xi_i}(\alpha_i \xi_i) - \frac{\partial}{\partial \xi_i}(\mu_i \xi_i)$$
+
+$$\frac{\partial \mathcal{L}}{\partial \xi_i} = C - \alpha_i - \mu_i$$
+
+#### 令其等於 0：
+
+$$\boxed{C - \alpha_i - \mu_i = 0}$$
+
+> 這就是Stationarity 的第三行
+
+### 其他 KKT 條件 (可行性與互補鬆弛)
+
+#### Primal/Dual 可行性：這不是「推導」出來的，它們是問題的定義
+
+- $\xi_i \ge 0$：Primal 約束 (來自 2.3 )
+
+- $\alpha_i \ge 0, \mu_i \ge 0$：Dual 約束 (Lagrange 的定義)
+
+#### 互補鬆弛 (Complementary Slackness)：這也不是「推導」出來的，而是 KKT 條件的規則
+
+- 規則： Lagrange乘子 $\times$ 對應的約束 $= 0$
+
+- 對應 $\alpha_i$ 的約束是 $[y_i(\mathbf{w}^T\mathbf{x}_i + b) - 1 + \xi_i] \ge 0$，所以：
+
+$$  \alpha_i [y_i(\mathbf{w}^T\mathbf{x}_i + b) - 1 + \xi_i] = 0$$
+
+- 對應 $\mu_i$ 的約束是 $\xi_i \ge 0$，所以：
+
+$$  \mu_i \xi_i = 0$$
+
+### 最終結論 ($0 \le \alpha_i \le C$ 的推導)
+
+#### 這個結論是 3.3 節中 KKT 條件的內部推論：
+
+#### 我們從 Stationarity 得到： 
+
+$$C - \alpha_i - \mu_i = 0$$
+
+#### 我們從 Dual 可行性 得到： 
+
+$$\alpha_i \ge 0 且 \mu_i \ge 0$$
+
+#### 將第一項重新整理為：
+
+$$\alpha_i = C - \mu_i$$
+
+因為我們知道 
+$\mu_i \ge 0$，所以 
+$C - \mu_i$ 必定小於或等於 $C$因此，
+$\alpha_i \le C$。
+
+#### 再結合 $\alpha_i \ge 0$ (Dual 可行性)，我們就得到了最終的「盒約束」：
+
+$$\boxed{0 \le \alpha_i \le C}$$
 
 ---
 
